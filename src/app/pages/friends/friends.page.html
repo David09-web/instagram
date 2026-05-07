@@ -1,0 +1,33 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Amigos</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/feed"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <ion-item lines="full">
+      <ion-label><strong>Pendientes</strong></ion-label>
+    </ion-item>
+    <ion-item *ngFor="let r of pending">
+      <ion-label>
+        {{ r.user?.profile?.username || r.user?.name }}
+      </ion-label>
+      <ion-button size="small" (click)="accept(r)">Aceptar</ion-button>
+    </ion-item>
+  </ion-list>
+
+  <ion-list>
+    <ion-item lines="full">
+      <ion-label><strong>Siguiendo</strong></ion-label>
+    </ion-item>
+    <ion-item *ngFor="let f of friends">
+      <ion-label>
+        {{ f.profile?.username || f.name }}
+      </ion-label>
+    </ion-item>
+  </ion-list>
+</ion-content>

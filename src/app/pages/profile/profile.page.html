@@ -1,0 +1,58 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/feed"></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{ user?.profile?.username || user?.name }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div *ngIf="user" class="ion-padding">
+    
+    <!-- encabezado de perfil -->
+    <ion-row class="ion-align-items-center">
+      <ion-col size="4">
+        <ion-avatar style="width: 80px; height: 80px;">
+          <img [src]="user.profile?.avatar || 'https://i.pravatar.cc/150?u=' + user.id" />
+        </ion-avatar>
+      </ion-col>
+      <ion-col size="8">
+        <ion-row class="ion-text-center">
+          <ion-col>
+            <strong>{{ user.posts?.length || 0 }}</strong><br>
+            <p style="font-size: 12px;">Posts</p>
+          </ion-col>
+          <ion-col>
+            <strong>{{ user.friends?.length || 0 }}</strong><br>
+            <p style="font-size: 12px;">Amigos</p>
+          </ion-col>
+        </ion-row>
+      </ion-col>
+    </ion-row>
+
+    <div class="ion-margin-top">
+      <strong>{{ user.name }}</strong>
+      <p style="margin: 0;">{{ user.profile?.bio }}</p>
+      <a [href]="user.profile?.website" target="_blank" style="font-size: 13px; color: #00376b; text-decoration: none;">
+        {{ user.profile?.website }}
+      </a>
+    </div>
+
+    <hr style="border: 0; border-top: 1px solid #dbdbdb; margin: 20px 0;">
+
+    <!-- grid de publicaciones -->
+    <ion-grid class="ion-no-padding">
+      <ion-row>
+        <ion-col size="4" *ngFor="let post of user.posts" style="padding: 1px;">
+          <img [src]="imgUrl(post.image)" style="width: 100%; aspect-ratio: 1/1; object-fit: cover;" />
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+
+  </div>
+
+  <div *ngIf="!user" class="ion-padding ion-text-center">
+    <ion-label>Cargando perfil...</ion-label>
+  </div>
+</ion-content>
