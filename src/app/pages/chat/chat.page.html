@@ -1,0 +1,50 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/conversations"></ion-back-button>
+    </ion-buttons>
+    <ion-avatar slot="start" style="width:36px;height:36px;margin:0 10px;" *ngIf="partner">
+      <img [src]="avatarUrl(partner)" />
+    </ion-avatar>
+    <ion-title>{{ partner?.profile?.username || partner?.name || '...' }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="chat-content">
+  <!-- Spinner de carga -->
+  <div *ngIf="loading" class="loading-wrap">
+    <ion-spinner name="crescent"></ion-spinner>
+  </div>
+
+  <!-- Lista de mensajes -->
+  <div *ngIf="!loading" class="messages-list">
+    <div *ngIf="messages.length === 0" class="empty-chat">
+      <ion-icon name="chatbubble-outline" style="font-size:48px;color:#ccc;"></ion-icon>
+      <p>Sé el primero en escribir 👋</p>
+    </div>
+
+    <div *ngFor="let msg of messages" class="bubble-wrap" [class.mine]="isMine(msg)" [class.theirs]="!isMine(msg)">
+      <ion-avatar class="bubble-avatar" *ngIf="!isMine(msg)">
+        <img [src]="avatarUrl(partner)" />
+      </ion-avatar>
+      <div class="bubble" [class.bubble-mine]="isMine(msg)" [class.bubble-theirs]="!isMine(msg)">
+        <p class="bubble-text">{{ msg.body }}</p>
+        <span class="bubble-time">{{ msg.created_at | date:'HH:mm' }}</span>
+      </div>
+    </div>
+  </div>
+</ion-content>
+
+<ion-footer class="chat-footer">
+  <ion-item lines="none" class="input-row">
+    <ion-input
+      [(ngModel)]="newMessage"
+      placeholder="Escribe un mensaje..."
+      (keydown)="onEnter($event)"
+      class="chat-input"
+    ></ion-input>
+    <ion-button slot="end" fill="clear" (click)="send()" [disabled]="!newMessage.trim() || sending">
+      <ion-icon name="send-outline" [color]="newMessage.trim() ? 'primary' : 'medium'"></ion-icon>
+    </ion-button>
+  </ion-item>
+</ion-footer>

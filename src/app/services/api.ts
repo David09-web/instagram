@@ -76,4 +76,17 @@ export class Api {
   searchUsers(query: string) {
     return this.http.get<any[]>(this.apiUrl + `users/search?q=${query}`, this.authHeaders());
   }
+
+  // ── Mensajería ──────────────────────────────────────────────────────────
+  getConversations() {
+    return this.http.get<any[]>(this.apiUrl + 'conversations', this.authHeaders());
+  }
+
+  getMessages(userId: number) {
+    return this.http.get<any[]>(this.apiUrl + `messages/${userId}`, this.authHeaders());
+  }
+
+  sendMessage(userId: number, body: string) {
+    return this.http.post<any>(this.apiUrl + `messages/${userId}`, { body }, this.authHeaders());
+  }
 }

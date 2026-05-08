@@ -1,0 +1,42 @@
+<ion-header class="story-header">
+  <ion-toolbar color="dark" style="--background: transparent;">
+    <!-- Barras de progreso -->
+    <div class="progress-bars" slot="start">
+      <div
+        *ngFor="let s of stories; let i = index"
+        class="progress-segment"
+      >
+        <div
+          class="progress-fill"
+          [style.width.%]="i < currentIndex ? 100 : (i === currentIndex ? progress : 0)"
+        ></div>
+      </div>
+    </div>
+    <ion-buttons slot="end">
+      <ion-button (click)="close()" fill="clear">
+        <ion-icon name="close-outline" color="light"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="story-content" [fullscreen]="true">
+  <!-- Imagen de la historia -->
+  <div class="story-image-wrap" (click)="next()">
+    <img [src]="imageUrl(currentStory?.image)" class="story-image" />
+  </div>
+
+  <!-- Zona de clic izquierda para "prev" -->
+  <div class="tap-zone tap-left" (click)="$event.stopPropagation(); prev()"></div>
+  <!-- Zona de clic derecha para "next" -->
+  <div class="tap-zone tap-right" (click)="$event.stopPropagation(); next()"></div>
+
+  <!-- Info del usuario -->
+  <div class="story-user-info">
+    <img
+      class="story-user-avatar"
+      [src]="currentStory?.user?.profile?.avatar || 'https://i.pravatar.cc/150?u=' + currentStory?.user_id"
+    />
+    <span class="story-username">{{ currentStory?.user?.profile?.username || currentStory?.user?.name }}</span>
+  </div>
+</ion-content>

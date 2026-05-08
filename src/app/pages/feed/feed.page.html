@@ -1,16 +1,15 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>Feed</ion-title>
-    <ion-buttons slot="start">
-      <ion-button (click)="goNewPost()">
-        <ion-icon name="camera-outline"></ion-icon>
-      </ion-button>
-    </ion-buttons>
+    <!-- Logo estilo Instagram -->
+    <ion-title slot="start" class="feed-logo">InstaApp</ion-title>
     <ion-buttons slot="end">
-      <ion-button (click)="goFriends()">
-        <ion-icon name="person-add"></ion-icon>
+      <ion-button (click)="goNewPost()" title="Nueva publicación">
+        <ion-icon name="add-circle-outline"></ion-icon>
       </ion-button>
-      <ion-button (click)="logout()">
+      <ion-button (click)="goConversations()" title="Mensajes">
+        <ion-icon name="chatbubble-outline"></ion-icon>
+      </ion-button>
+      <ion-button (click)="logout()" title="Cerrar sesión">
         <ion-icon name="exit-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
@@ -18,84 +17,139 @@
 </ion-header>
 
 <ion-content>
+  <div class="layout-20-80">
 
-  <!-- historias y amigos -->
-  <div style="display: flex; overflow-x: auto; padding: 10px; border-bottom: 1px solid #eee; background: #fafafa;">
-    <!-- botón para agregar historia -->
-    <div (click)="goNewPost()" style="text-align: center; margin-right: 15px; flex-shrink: 0;">
-      <div style="width: 65px; height: 65px; border-radius: 50%; border: 2px solid #ccc; display: flex; align-items: center; justify-content: center; background: #fff;">
-        <ion-icon name="add" style="font-size: 30px; color: #666;"></ion-icon>
-      </div>
-      <p style="font-size: 11px; margin-top: 4px;">Tu historia</p>
-    </div>
+    <!-- ════════════════════════════════
+         SIDEBAR 20%
+         ════════════════════════════════ -->
+    <aside class="sidebar">
+      <nav class="sidebar-nav">
+        <button class="nav-item active" (click)="null" title="Inicio">
+          <ion-icon name="home-outline"></ion-icon>
+          <span>Inicio</span>
+        </button>
+        <button class="nav-item" (click)="goConversations()" title="Mensajes">
+          <ion-icon name="chatbubble-outline"></ion-icon>
+          <span>Mensajes</span>
+        </button>
+        <button class="nav-item" (click)="goFriends()" title="Amigos">
+          <ion-icon name="people-outline"></ion-icon>
+          <span>Amigos</span>
+        </button>
+        <button class="nav-item" (click)="goNewPost()" title="Publicar">
+          <ion-icon name="add-circle-outline"></ion-icon>
+          <span>Publicar</span>
+        </button>
+        <button class="nav-item" (click)="logout()" title="Salir">
+          <ion-icon name="exit-outline"></ion-icon>
+          <span>Salir</span>
+        </button>
+      </nav>
+    </aside>
 
-    <!-- amigos conectados (stories) -->
-    <div *ngFor="let s of stories" (click)="goProfile(s.user_id)" style="text-align: center; margin-right: 15px; flex-shrink: 0;">
-      <div style="width: 65px; height: 65px; border-radius: 50%; border: 2px solid #d62976; padding: 2px;">
-        <img [src]="s.user?.profile?.avatar || 'https://i.pravatar.cc/150?u=' + s.user_id" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 2px solid white;" />
-      </div>
-      <p style="font-size: 11px; margin-top: 4px;">{{ s.user?.profile?.username || s.user?.name }}</p>
-    </div>
+    <!-- ════════════════════════════════
+         CONTENT 80%
+         ════════════════════════════════ -->
+    <main class="main-content">
 
-    <!-- amigos sin historias -->
-    <div *ngFor="let f of friends" (click)="goProfile(f.id)" style="text-align: center; margin-right: 15px; flex-shrink: 0;">
-       <div style="width: 65px; height: 65px; border-radius: 50%; border: 1px solid #ccc; padding: 2px;">
-        <img [src]="f.profile?.avatar || 'https://i.pravatar.cc/150?u=' + f.id" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;" />
+      <!-- ── Historias ─────────────────────── -->
+      <div class="stories-row">
+        <!-- Botón "Tu historia" -->
+        <div class="story-item" (click)="goNewPost()">
+          <div class="story-ring add-ring">
+            <ion-icon name="add" class="add-icon"></ion-icon>
+          </div>
+          <p class="story-label">Tu historia</p>
+        </div>
+
+        <!-- Historias de amigos -->
+        <div
+          *ngFor="let s of stories; let i = index"
+          class="story-item"
+          (click)="openStory(i)"
+        >
+          <div class="story-ring active-ring">
+            <img [src]="s.user?.profile?.avatar || 'https://i.pravatar.cc/150?u=' + s.user_id" class="story-avatar" />
+          </div>
+          <p class="story-label">{{ s.user?.profile?.username || s.user?.name }}</p>
+        </div>
+
+        <!-- Amigos sin historia -->
+        <div *ngFor="let f of friends" class="story-item" (click)="goProfile(f.id)">
+          <div class="story-ring inactive-ring">
+            <img [src]="f.profile?.avatar || 'https://i.pravatar.cc/150?u=' + f.id" class="story-avatar" />
+          </div>
+          <p class="story-label">{{ f.profile?.username || f.name }}</p>
+        </div>
       </div>
-      <p style="font-size: 11px; margin-top: 4px;">{{ f.profile?.username || f.name }}</p>
-    </div>
+
+      <!-- ── Buscador de usuarios ────────────── -->
+      <div class="search-wrap">
+        <ion-item lines="none" class="search-bar-item">
+          <ion-icon name="search" slot="start" class="search-icon"></ion-icon>
+          <ion-input
+            placeholder="Buscar por nombre o usuario..."
+            [(ngModel)]="searchTerm"
+            (ionInput)="onSearch()"
+            class="search-input"
+          ></ion-input>
+        </ion-item>
+
+        <ion-list *ngIf="searchResults.length > 0" class="search-results">
+          <ion-item *ngFor="let user of searchResults" (click)="goProfile(user.id)" button detail="false">
+            <ion-avatar slot="start">
+              <img [src]="user.profile?.avatar || 'https://i.pravatar.cc/150?u=' + user.id" />
+            </ion-avatar>
+            <ion-label>
+              <h3>{{ user.profile?.username }}</h3>
+              <p>{{ user.name }}</p>
+            </ion-label>
+            <ion-button fill="clear" slot="end" (click)="$event.stopPropagation(); addFriend(user.id)">
+              <ion-icon name="person-add"></ion-icon>
+            </ion-button>
+          </ion-item>
+        </ion-list>
+      </div>
+
+      <!-- ── Posts ─────────────────────────── -->
+      <div class="posts-list">
+        <div *ngFor="let p of posts" class="post-card">
+          <!-- Header del post -->
+          <div class="post-header" (click)="goProfile(p.user?.id)">
+            <img
+              [src]="p.user?.profile?.avatar || 'https://i.pravatar.cc/150?u=' + p.user?.id"
+              class="post-user-avatar"
+            />
+            <div>
+              <p class="post-username">{{ p.user?.profile?.username || p.user?.name }}</p>
+            </div>
+          </div>
+
+          <!-- Imagen del post -->
+          <img [src]="imgUrl(p.image)" class="post-image" />
+
+          <!-- Acciones -->
+          <div class="post-actions">
+            <button class="action-btn" (click)="like(p)">
+              ❤️ <span>{{ p.likes?.length || 0 }}</span>
+            </button>
+            <button class="action-btn" (click)="openComments(p)">
+              💬 Comentar
+            </button>
+          </div>
+
+          <!-- Caption -->
+          <div class="post-caption" *ngIf="p.caption">
+            <strong>{{ p.user?.profile?.username || p.user?.name }}</strong> {{ p.caption }}
+          </div>
+        </div>
+      </div>
+
+    </main>
   </div>
 
-  <!-- buscador de usuarios -->
-  <div style="padding: 10px; background: white;">
-    <ion-item lines="none" style="--background: #f0f0f0; border-radius: 10px;">
-      <ion-icon name="search" slot="start"></ion-icon>
-      <ion-input placeholder="Buscar por nombre o usuario..." [(ngModel)]="searchTerm" (ionInput)="onSearch()"></ion-input>
-    </ion-item>
-    
-    <ion-list *ngIf="searchResults.length > 0" style="position: absolute; width: 95%; z-index: 1001; box-shadow: 0 4px 6px rgba(0,0,0,0.1); border-radius: 0 0 10px 10px;">
-      <ion-item *ngFor="let user of searchResults" (click)="goProfile(user.id)">
-        <ion-avatar slot="start">
-          <img [src]="user.profile?.avatar || 'https://i.pravatar.cc/150?u=' + user.id" />
-        </ion-avatar>
-        <ion-label>
-          <h3>{{ user.profile?.username }}</h3>
-          <p>{{ user.name }}</p>
-        </ion-label>
-        <ion-button fill="clear" slot="end" (click)="$event.stopPropagation(); addFriend(user.id)">
-          <ion-icon name="person-add"></ion-icon>
-        </ion-button>
-      </ion-item>
-    </ion-list>
-  </div>
-
-  <!-- posts -->
-  <ion-list *ngFor="let p of posts">
-    <ion-item lines="none">
-      <ion-avatar slot="start">
-        <img src="https://placehold.co/64x64" />
-      </ion-avatar>
-      <ion-label>
-        <h2>{{ p.user?.profile?.username || p.user?.name }}</h2>
-        <p>{{ p.caption }}</p>
-      </ion-label>
-    </ion-item>
-
-    <img [src]="imgUrl(p.image)" style="width:100%;max-height:280px;object-fit:cover;" />
-
-    <ion-item>
-      <ion-button fill="clear" (click)="like(p)">
-        ❤️ Like ({{ p.likes?.length || 0 }})
-      </ion-button>
-      <ion-button fill="clear" (click)="openComments(p)">
-        💬
-      </ion-button>
-    </ion-item>
-  </ion-list>
-
-  <!-- panel de comentarios -->
-  <div *ngIf="showComments"
-       style="position:fixed;bottom:0;left:0;right:0;top:25%;background:white;z-index:1000;box-shadow:0 -4px 12px rgba(0,0,0,.15);">
+  <!-- ── Panel de comentarios superpuesto ── -->
+  <div *ngIf="showComments" class="comments-panel">
     <ion-header>
       <ion-toolbar>
         <ion-title>Comentarios</ion-title>
@@ -119,5 +173,4 @@
       </ion-item>
     </ion-content>
   </div>
-
 </ion-content>

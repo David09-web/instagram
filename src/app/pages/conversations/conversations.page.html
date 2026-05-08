@@ -1,0 +1,51 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/feed"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Mensajes</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <!-- Skeletons de carga -->
+  <ion-list *ngIf="loading">
+    <ion-item *ngFor="let i of [1,2,3,4,5]">
+      <ion-avatar slot="start">
+        <ion-skeleton-text animated></ion-skeleton-text>
+      </ion-avatar>
+      <ion-label>
+        <h3><ion-skeleton-text animated style="width:50%"></ion-skeleton-text></h3>
+        <p><ion-skeleton-text animated style="width:80%"></ion-skeleton-text></p>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+
+  <!-- Lista de conversaciones -->
+  <ion-list *ngIf="!loading">
+    <div *ngIf="conversations.length === 0" class="empty-state">
+      <ion-icon name="chatbubble-outline"></ion-icon>
+      <p>No tienes conversaciones aún.<br>Busca amigos desde el feed.</p>
+    </div>
+
+    <ion-item
+      *ngFor="let conv of conversations"
+      button
+      (click)="openChat(conv.user.id)"
+      detail="false"
+      class="conv-item"
+    >
+      <ion-avatar slot="start">
+        <img [src]="avatarUrl(conv.user)" />
+      </ion-avatar>
+      <ion-label>
+        <h3 class="conv-name">{{ conv.user?.profile?.username || conv.user?.name }}</h3>
+        <p class="conv-preview">{{ conv.last_message?.body || 'Sin mensajes aún' }}</p>
+      </ion-label>
+      <div slot="end" class="conv-meta">
+        <ion-note class="conv-time">{{ formatTime(conv.last_message?.created_at) }}</ion-note>
+        <ion-badge *ngIf="conv.unread > 0" color="danger">{{ conv.unread }}</ion-badge>
+      </div>
+    </ion-item>
+  </ion-list>
+</ion-content>

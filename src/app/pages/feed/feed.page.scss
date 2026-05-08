@@ -1,0 +1,294 @@
+// Feed logo
+.feed-logo {
+  font-family: 'Georgia', cursive;
+  font-size: 22px;
+  font-weight: bold;
+  background: linear-gradient(45deg, #405de6, #c13584, #e1306c, #fd1d1d);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+// ═══════════════════════════════════
+// LAYOUT 20 / 80
+// ═══════════════════════════════════
+.layout-20-80 {
+  display: flex;
+  min-height: 100%;
+}
+
+// ── Sidebar ──────────────────────────
+.sidebar {
+  width: 20%;
+  min-width: 70px;
+  max-width: 220px;
+  background: #fff;
+  border-right: 1px solid #efefef;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 16px;
+  position: sticky;
+  top: 0;
+  height: calc(100vh - 56px); // Descontar header
+  z-index: 10;
+  overflow: hidden;
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 100%;
+  padding: 0 8px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  color: #333;
+  text-align: left;
+  width: 100%;
+  transition: background 0.2s ease;
+
+  ion-icon {
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+
+  span {
+    display: none; // Ocultar texto en pantallas pequeñas
+  }
+
+  &:hover, &.active {
+    background: #fafafa;
+    color: #405de6;
+  }
+
+  &.active {
+    font-weight: 600;
+  }
+}
+
+// Mostrar texto del sidebar en pantallas medianas/grandes
+@media (min-width: 520px) {
+  .nav-item span { display: inline; }
+}
+
+// ── Contenido principal ──────────────
+.main-content {
+  flex: 1;
+  min-width: 0;
+  padding: 0;
+  overflow-y: auto;
+}
+
+// ═══════════════════════════════════
+// HISTORIAS
+// ═══════════════════════════════════
+.stories-row {
+  display: flex;
+  overflow-x: auto;
+  padding: 14px 12px;
+  gap: 14px;
+  border-bottom: 1px solid #efefef;
+  background: #fff;
+  scrollbar-width: none;
+  &::-webkit-scrollbar { display: none; }
+}
+
+.story-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.story-ring {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px;
+  transition: transform 0.15s ease;
+
+  &:hover { transform: scale(1.05); }
+}
+
+.active-ring {
+  background: linear-gradient(45deg, #f9ce34, #ee2a7b, #6228d7);
+}
+
+.inactive-ring {
+  background: #e0e0e0;
+}
+
+.add-ring {
+  background: #f0f0f0;
+  border: 2px dashed #ccc;
+}
+
+.story-avatar {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #fff;
+}
+
+.add-icon {
+  font-size: 28px;
+  color: #666;
+}
+
+.story-label {
+  font-size: 11px;
+  margin-top: 5px;
+  text-align: center;
+  max-width: 66px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: #333;
+}
+
+// ═══════════════════════════════════
+// BUSCADOR
+// ═══════════════════════════════════
+.search-wrap {
+  padding: 10px 12px;
+  position: relative;
+  background: #fff;
+}
+
+.search-bar-item {
+  --background: #f0f0f0;
+  --border-radius: 10px;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.search-icon {
+  color: #888;
+  margin-right: 6px;
+}
+
+.search-results {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  z-index: 1001;
+  background: #fff;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+  border-radius: 0 0 10px 10px;
+}
+
+// ═══════════════════════════════════
+// POSTS
+// ═══════════════════════════════════
+.posts-list {
+  padding: 0;
+}
+
+.post-card {
+  background: #fff;
+  margin-bottom: 8px;
+  border-bottom: 1px solid #efefef;
+}
+
+.post-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  cursor: pointer;
+}
+
+.post-user-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.post-username {
+  margin: 0;
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.post-image {
+  width: 100%;
+  max-height: 400px;
+  object-fit: cover;
+  display: block;
+}
+
+.post-actions {
+  display: flex;
+  gap: 4px;
+  padding: 8px 12px;
+}
+
+.action-btn {
+  background: transparent;
+  border: none;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 6px 10px;
+  border-radius: 8px;
+  color: #333;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  transition: background 0.15s;
+
+  &:hover { background: #f5f5f5; }
+}
+
+.post-caption {
+  padding: 0 12px 12px;
+  font-size: 13px;
+  line-height: 1.4;
+  color: #333;
+}
+
+// ═══════════════════════════════════
+// PANEL DE COMENTARIOS
+// ═══════════════════════════════════
+.comments-panel {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  top: 25%;
+  background: white;
+  z-index: 1000;
+  box-shadow: 0 -4px 20px rgba(0,0,0,0.15);
+  display: flex;
+  flex-direction: column;
+  border-radius: 16px 16px 0 0;
+}
+
+// ═══════════════════════════════════
+// RESPONSIVE - Ocultar sidebar en mobile
+// ═══════════════════════════════════
+@media (max-width: 480px) {
+  .sidebar {
+    display: none; // En móvil muy pequeño el sidebar se oculta
+  }
+
+  .layout-20-80 {
+    flex-direction: column;
+  }
+}
