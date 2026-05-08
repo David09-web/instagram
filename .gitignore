@@ -68,3 +68,11 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
+
+# Backend (insta-api-main)
+insta-api-main/vendor/
+insta-api-main/node_modules/
+insta-api-main/.env
+insta-api-main/storage/*.key
+insta-api-main/public/storage
+insta-api-main/public/hot
